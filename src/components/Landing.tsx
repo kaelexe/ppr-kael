@@ -33,9 +33,9 @@ const Landing = () => {
                   loop: true,
                   delay: 70,
                   strings: [
-                    "an I.T Student,",
-                    "a Web Developer,",
-                    "UI/UX designer.",
+                    "I.T Graduate",
+                    "Web Developer",
+                    "UI/UX designer",
                   ],
                 }}
               />

@@ -1,9 +1,8 @@
 import styled from "styled-components";
 import { createGlobalStyle } from "styled-components";
+import "@fontsource/poppins";
 
 export const GlobalStyles = createGlobalStyle`
-    @importurl ('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
-    
     *{
       margin: 0;
       padding: 0;
@@ -37,13 +36,13 @@ export const GlobalStyles = createGlobalStyle`
 `;
 
 export const Container = styled.div`
-    z-index: 1;
-    width: 100%;
-    max-width: 1300px;
-    max-height: 700px;
-    margin-right: auto;
-    margin-left: auto;
-    padding-right: 50px;
-    padding-left: 50px;
-
+  z-index: 1;
+  width: 100%;
+  max-width: 1300px;
+  max-height: 700px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 50px;
+  padding-left: 50px;
+  max-height: fit-content;
 `;

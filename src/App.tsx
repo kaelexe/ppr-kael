@@ -2,7 +2,7 @@ import React from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
-import About from "./components/About"
+import About from "./components/About";
 import "./App.css";
 
 function App() {
@@ -10,8 +10,14 @@ function App() {
     <>
       <ChakraProvider>
         <Navbar />
-        <Landing />
-        <About />
+
+        <section id="home">
+          <Landing />
+        </section>
+
+        <section id="about">
+          <About />
+        </section>
       </ChakraProvider>
     </>
   );

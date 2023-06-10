@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
 import { Text } from "@chakra-ui/react";
-
+import { Breakpoints } from "../../styles/Dimensions";
 
 // anims
 const moveRight = keyframes`
@@ -27,66 +27,68 @@ const moveLeft = keyframes`
     }
 `;
 
-
 export const Hom = styled.div`
-    display: flex;
-    height: 100vh;
-    width: 100%;
+  display: flex;
+  height: 100vh;
+  width: 100%;
 `;
 
 export const Intro = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    margin-left: 100px;
-    font-size: 50px;
-    width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-left: 100px;
+  font-size: 50px;
+  width: 50%;
 
-    @media screen and (max-width: 797px){
-        font-size: 25px;
-    }
+  @media screen and (max-width: 797px) {
+    font-size: 25px;
+  }
 
-    @media screen and (max-width: 600px){
-        font-size: 30px;
-    }
+  @media screen and (max-width: 600px) {
+    font-size: 30px;
+  }
 
-    @media screen and (max-width: 400px){
-        font-size: 18px;
-    }
-
+  @media screen and (max-width: 400px) {
+    font-size: 18px;
+  }
 `;
 
 export const Heading = styled(Text)`
-    display: block;
+  display: block;
 `;
 
 export const TopText = styled.div`
-    pointer-events: none;
-    animation-name: ${moveRight};
-    animation-duration: 0.7s;
-
+  pointer-events: none;
+  animation-name: ${moveRight};
+  animation-duration: 0.7s;
+  transition: all 0.5s ease;
 `;
 
 export const BottomText = styled.div`
-    animation-name: ${moveLeft};
-    animation-duration: 1s;
+  animation-name: ${moveLeft};
+  animation-duration: 1s;
+  transition: all 0.5s ease;
+
+  /* @media screen and (max-width: ${Breakpoints.width.tablet.large}px) {
+    font-size: 40px;
+  } */
 `;
 
 export const Type = styled.div`
-    font-size: 40px;
-    color: #e35a1f83;
+  font-size: 40px;
+  color: #e35a1f83;
 
-    @media screen and (max-width: 797px){
-        font-size: 25px;
-    }
+  @media screen and (max-width: 797px) {
+    font-size: 25px;
+  }
 
-    @media screen and (max-width: 600px){
-        font-size: 24px;
-    }
+  @media screen and (max-width: 600px) {
+    font-size: 24px;
+  }
 
-    @media screen and (max-width: 400px){
-        font-size: 15px;
-    }
-
+  @media screen and (max-width: 400px) {
+    font-size: 15px;
+  }
 `;

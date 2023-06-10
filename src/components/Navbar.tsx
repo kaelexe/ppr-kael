@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "remixicon/fonts/remixicon.css";
 import { ReactComponent as KLX } from "../assets/klx_logo.svg";
+import { ReactComponent as KLXMAIN } from "../assets/klx_main.svg";
 import {
   NavContainer,
   LogoIcon,
@@ -11,27 +12,54 @@ import {
 import { GlobalStyles } from "./styles/Global.styles";
 import { RiAlignRight } from "react-icons/ri";
 import { GoX } from "react-icons/go";
+import { Breakpoints } from "../styles/Dimensions";
 
 export default function Navbar() {
   const [click, setClick] = useState(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   const clickHandler = () => setClick(!click);
+
+  useEffect(() => {
+    // Event handler to update the window size state
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    // Attach the event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []); // Empty dependency array to run the effect only once
 
   return (
     <NavContainer>
       <GlobalStyles />
-      <LogoIcon as="a" href="#" className="logo">
-        <KLX />
+      <LogoIcon as="a" href="#home" className="logo">
+        {windowSize.width > Breakpoints.width.tablet.large ? (
+          <KLXMAIN />
+        ) : (
+          <KLX />
+        )}
       </LogoIcon>
 
       <Navibar click={click}>
-        <li>
+        {/* <li>
           <Options as="a" href="#" className="active">
             Home
           </Options>
-        </li>
+        </li> */}
         <li>
-          <Options as="a" href="#">
+          <Options as="a" href="#about">
             About
           </Options>
         </li>
@@ -42,7 +70,7 @@ export default function Navbar() {
         </li> */}
         <li>
           <Options as="a" href="#">
-            Projects
+            Works
           </Options>
         </li>
         <li>

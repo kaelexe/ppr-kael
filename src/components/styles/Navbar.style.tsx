@@ -16,7 +16,7 @@ export const NavContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: Transparent;
+  background: #fff;
   padding: 28px 1;
   transition: all 0.5s ease;
 
@@ -86,7 +86,7 @@ export const Burgir = styled.div`
   }
 `;
 
-export const Options = styled(Text)`
+export const Options = styled.a`
   font-size: 1.1rem;
   font-weight: 500;
   padding: 5px 0;
