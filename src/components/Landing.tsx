@@ -1,49 +1,35 @@
-import React, { useState } from "react";
-import { GlobalStyles, Container } from "./styles/Global.styles";
+import React from "react";
 import {
-  Hom,
+  LandingWrapper,
+  Hero,
   Intro,
-  Heading,
   TopText,
   BottomText,
   Type,
 } from "./styles/Landing.style";
 import Typewriter from "typewriter-effect";
+import { ThemeProvider } from "@chakra-ui/react";
 
 const Landing = () => {
-  const [state] = useState({
-    toptext: "Hi,",
-    bottomtext: "I'm John Michael",
-  });
-
   return (
-    <>
-      <Container>
-        <GlobalStyles />
-        <Hom>
-          <Intro>
-            <Heading>
-              <TopText>{state.toptext}</TopText>
-              <BottomText>{state.bottomtext}</BottomText>
-            </Heading>
-            <Type>
-              <Typewriter
-                options={{
-                  autoStart: true,
-                  loop: true,
-                  delay: 70,
-                  strings: [
-                    "I.T Graduate",
-                    "Web Developer",
-                    "UI/UX designer",
-                  ],
-                }}
-              />
-            </Type>
-          </Intro>
-        </Hom>
-      </Container>
-    </>
+    <LandingWrapper>
+      <Hero>
+        <Intro>
+          <TopText>Hi,</TopText>
+          <BottomText>I'm John Michael</BottomText>
+          <Type>
+            <Typewriter
+              options={{
+                autoStart: true,
+                loop: true,
+                delay: 70,
+                strings: ["I.T Graduate", "Web Developer", "UI/UX Designer"],
+              }}
+            />
+          </Type>
+        </Intro>
+      </Hero>
+    </LandingWrapper>
   );
 };
 

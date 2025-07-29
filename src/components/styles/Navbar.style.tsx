@@ -1,105 +1,86 @@
 import styled from "styled-components";
-import { Text } from "@chakra-ui/react";
-import { Container } from "./Global.styles";
 
-interface ComponentProps {
-  click: boolean;
+interface NavibarProps {
+  open: boolean;
 }
 
 export const NavContainer = styled.header`
   position: fixed;
-  height: 80px;
-  width: 100%;
   top: 0;
-  right: 0;
+  width: 100%;
+  height: 80px;
   z-index: 1000;
+  background: white;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  background: #fff;
-  padding: 28px 1;
-  transition: all 0.5s ease;
-
-  ${Container}
-`;
-
-export const Navibar = styled.ul<ComponentProps>`
-  display: flex;
-
-  & a.active {
-    color: #e35a1f83;
-  }
-
-  @media screen and (max-width: 900px) {
-    position: absolute;
-    top: 100%;
-    right: ${({ click }) => (click ? 0 : "-100%")};
-    width: 270px;
-    height: 37vh;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    border-radius: 10px;
-    opacity: 1;
-    transition: all 0.5s ease;
-
-    & a {
-      display: block;
-      margin: 10px 0;
-      padding: 0px 25px;
-    }
-  }
-
-  @media screen and (max-height: 940px) {
-    & a {
-      display: block;
-      margin: 5px 0;
-      padding: 0px 10px;
-    }
-  }
-`;
-
-export const LogoIcon = styled.i`
-  display: flex;
-  margin-left: 20px;
   align-items: center;
+  padding: 0 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 `;
 
-export const TitleStyle = styled.span`
-  font-size: 1.1rem;
-  font-weight: 600;
+export const LogoWrapper = styled.a`
+  display: flex;
+  align-items: center;
+
+  .logo-desktop {
+    display: block;
+  }
+
+  .logo-mobile {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .logo-desktop {
+      display: none;
+    }
+
+    .logo-mobile {
+      display: block;
+    }
+  }
 `;
 
-export const Burgir = styled.div`
-  visibility: hidden;
+export const Navibar = styled.ul<NavibarProps>`
+  display: flex;
+  gap: 2rem;
+  list-style: none;
 
   @media (max-width: 900px) {
-    visibility: visible;
-    display: block;
+    flex-direction: column;
+    background: white;
     position: absolute;
-    top: 0;
-    right: 0;
-    transform: translate(-100%, 67%);
-    font-size: 1.8rem;
-    cursor: pointer;
+    top: 80px;
+    right: ${({ open }) => (open ? "0" : "-100%")};
+    width: 250px;
+    height: auto;
+    padding: 1rem;
+    box-shadow: -2px 2px 10px rgba(0, 0, 0, 0.1);
+    transition: right 0.3s ease;
+    border-radius: 0 0 0 10px;
   }
 `;
 
 export const Options = styled.a`
   font-size: 1.1rem;
   font-weight: 500;
-  padding: 5px 0;
-  margin: 0px, 30px;
-  transition: all 0.5s ease;
+  text-decoration: none;
+  color: #333;
+  transition: 0.3s ease;
 
   &:hover {
-    color: #e35a1f83;
-  }
-
-  @media (max-width: 900px) {
-    &:hover {
-      transform: translateY(5px);
-    }
+    color: #e35a1f;
   }
 `;
+
+export const Burgir = styled.div`
+  display: none;
+
+  @media (max-width: 900px) {
+    display: block;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+`;
+
+export const LogoIcon = styled.i``;

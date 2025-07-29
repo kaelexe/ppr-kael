@@ -1,94 +1,49 @@
-import styled, { keyframes } from "styled-components";
-import { Text } from "@chakra-ui/react";
-import { Breakpoints } from "../../styles/Dimensions";
+import styled from "styled-components";
+import { Heading } from "@chakra-ui/react";
 
-// anims
-const moveRight = keyframes`
-    0% {
-        opacity: 0;
-        transform: translate(100px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate(0);
-    }
-`;
-
-const moveLeft = keyframes`
-    0% {
-        opacity: 0;
-        transform: translate(150px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translate(0);
-    }
-`;
-
-export const Hom = styled.div`
-  display: flex;
-  height: 100vh;
+export const LandingWrapper = styled.div`
   width: 100%;
+  padding: 0 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+export const Hero = styled.section`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 60px);
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
 `;
 
 export const Intro = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: flex-start;
-  margin-left: 100px;
-  font-size: 50px;
-  width: 50%;
+  gap: 1rem;
 
-  @media screen and (max-width: 797px) {
-    font-size: 25px;
-  }
-
-  @media screen and (max-width: 600px) {
-    font-size: 30px;
-  }
-
-  @media screen and (max-width: 400px) {
-    font-size: 18px;
+  @media (max-width: 768px) {
+    align-items: center;
   }
 `;
 
-export const Heading = styled(Text)`
-  display: block;
+export const TopText = styled(Heading)`
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 400;
+  margin: 0;
 `;
 
-export const TopText = styled.div`
-  pointer-events: none;
-  animation-name: ${moveRight};
-  animation-duration: 0.7s;
-  transition: all 0.5s ease;
-`;
-
-export const BottomText = styled.div`
-  animation-name: ${moveLeft};
-  animation-duration: 1s;
-  transition: all 0.5s ease;
-
-  /* @media screen and (max-width: ${Breakpoints.width.tablet.large}px) {
-    font-size: 40px;
-  } */
+export const BottomText = styled(Heading)`
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 600;
+  margin: 0;
 `;
 
 export const Type = styled.div`
-  font-size: 40px;
-  color: #e35a1f83;
-
-  @media screen and (max-width: 797px) {
-    font-size: 25px;
-  }
-
-  @media screen and (max-width: 600px) {
-    font-size: 24px;
-  }
-
-  @media screen and (max-width: 400px) {
-    font-size: 15px;
-  }
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  color: #888;
 `;

@@ -1,53 +1,75 @@
 import styled from "styled-components";
-import { Image } from "@chakra-ui/react";
-import { Breakpoints } from "../../styles/Dimensions";
+import { Heading, Box } from "@chakra-ui/react";
 
-export const AboutContainer = styled.div`
+export const AboutWrapper = styled.section`
   display: flex;
-  height: 100%;
   flex-direction: column;
-  color: #fff;
-  font-size: 4rem;
-  transition: all 0.5s ease;
+  padding: 4rem 2rem;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+  height: calc(100vh - 60px);
+`;
 
-  h2 {
-    @media (width <= ${Breakpoints.width.tablet.medium}px) {
-      //for some reason, both h2 has different behaviour in terms of being centered
-      //for 1st h2 (THE MAN)
-      text-align: -webkit-center;
-      //for 1st h2 (TECHNOLOGIES)
-      place-items: center;
+export const SectionTitle = styled(Heading)`
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+`;
+
+export const Line = styled.div`
+  flex-grow: 1;
+  height: 2px;
+  background: #ffa500;
+  margin-left: 1rem;
+`;
+
+export const AboutContent = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    justify-content: space-between;
+  }
+`;
+
+export const Portrait = styled(Box)`
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: block;
+    width: 300px;
+    margin-right: 40px;
+
+    svg {
+      width: 100%;
+      height: auto;
     }
   }
 `;
 
-export const AboutContent = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  height: 100vh;
-`;
-
-export const TextContainer = styled.div`
+export const TextContainer = styled(Box)`
+  flex: 2;
+  max-width: 700px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-`;
+  justify-content: center;
 
-export const Fecture = styled.i`
-  object-fit: cover;
-  /* object-position: center; */
-  /* border-radius: full; */
-  /* box-sizing: 300px; */
-
-  @media (width <= ${Breakpoints.width.tablet.medium}px) {
-    display: none;
+  @media (max-width: 768px) {
+    max-width: 100%;
+    padding: 0;
   }
 `;
 
-export const Line = styled.div`
-  width: 10%;
-  height: 4px;
-  background-color: #e35a1f83;
-  margin: 0 0 1rem 0;
-  margin-top: 1rem;
+export const TechColumn = styled(Box)`
+  width: 100%;
+  max-width: 700px;
 `;

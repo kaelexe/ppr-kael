@@ -1,88 +1,105 @@
-import React, { useEffect, useState } from "react";
-import "remixicon/fonts/remixicon.css";
-import { ReactComponent as KLX } from "../assets/klx_logo.svg";
-import { ReactComponent as KLXMAIN } from "../assets/klx_main.svg";
+import React from "react";
 import {
-  NavContainer,
-  LogoIcon,
-  Navibar,
-  Options,
-  Burgir,
-} from "./styles/Navbar.style";
-import { GlobalStyles } from "./styles/Global.styles";
-import { RiAlignRight } from "react-icons/ri";
-import { GoX } from "react-icons/go";
-import { Breakpoints } from "../styles/Dimensions";
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  useDisclosure,
+  useColorMode,
+  useColorModeValue,
+  Stack,
+  Button,
+} from "@chakra-ui/react";
+import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { ReactComponent as Logo } from "../assets/klx_main.svg";
 
-export default function Navbar() {
-  const [click, setClick] = useState(false);
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+const Links = ["Home", "About", "Projects", "Contact"];
 
-  const clickHandler = () => setClick(!click);
+interface NavbarProps {
+  onNavigate: (page: string) => void;
+}
 
-  useEffect(() => {
-    // Event handler to update the window size state
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
+const NavLink = ({ children }: { children: React.ReactNode }) => (
+  <Button
+    variant="ghost"
+    size="sm"
+    fontWeight="medium"
+    _hover={{ bg: useColorModeValue("gray.200", "gray.700") }}
+  >
+    {children}
+  </Button>
+);
 
-    // Attach the event listener
-    window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []); // Empty dependency array to run the effect only once
+const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <NavContainer>
-      <GlobalStyles />
-      <LogoIcon as="a" href="#home" className="logo">
-        {windowSize.width > Breakpoints.width.tablet.large ? (
-          <KLXMAIN />
-        ) : (
-          <KLX />
-        )}
-      </LogoIcon>
+    <Box
+      bg={useColorModeValue("white", "gray.900")}
+      px={4}
+      boxShadow="md"
+      position="fixed"
+      top={0}
+      width="100%"
+      zIndex={10}
+    >
+      <Flex h={16} alignItems="center" justifyContent="space-between">
+        <HStack spacing={2}>
+          <Logo width="30px" height="30px" />
+        </HStack>
 
-      <Navibar click={click}>
-        {/* <li>
-          <Options as="a" href="#" className="active">
-            Home
-          </Options>
-        </li> */}
-        <li>
-          <Options as="a" href="#about">
-            About
-          </Options>
-        </li>
-        {/* <li>
-          <Options as="a" href="#">
-            
-          </Options>
-        </li> */}
-        <li>
-          <Options as="a" href="#">
-            Works
-          </Options>
-        </li>
-        <li>
-          <Options as="a" href="#">
-            Contacts
-          </Options>
-        </li>
-      </Navibar>
+        <HStack spacing={8} alignItems="center">
+          <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
+            {Links.map((link) => (
+              <NavLink key={link}>
+                <span onClick={() => onNavigate(link.toLowerCase())}>
+                  {link}
+                </span>
+              </NavLink>
+            ))}
+          </HStack>
+        </HStack>
 
-      <Burgir onClick={clickHandler}>
-        {click ? <GoX /> : <RiAlignRight />}
-      </Burgir>
-    </NavContainer>
+        <Flex alignItems="center">
+          <IconButton
+            aria-label="Toggle color mode"
+            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+            onClick={toggleColorMode}
+            mr={2}
+            size="sm"
+            variant="ghost"
+          />
+          <IconButton
+            size="md"
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label="Open Menu"
+            display={{ md: "none" }}
+            onClick={isOpen ? onClose : onOpen}
+          />
+        </Flex>
+      </Flex>
+
+      {isOpen ? (
+        <Box pb={4} display={{ md: "none" }}>
+          <Stack as="nav" spacing={4}>
+            {Links.map((link) => (
+              <NavLink key={link}>
+                <span
+                  onClick={() => {
+                    onNavigate(link.toLowerCase());
+                    onClose();
+                  }}
+                >
+                  {link}
+                </span>
+              </NavLink>
+            ))}
+          </Stack>
+        </Box>
+      ) : null}
+    </Box>
   );
-}
+};
+
+export default Navbar;
