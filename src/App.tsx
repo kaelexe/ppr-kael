@@ -3,6 +3,7 @@ import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
 import About from "./components/About";
+import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import { GlobalStyles } from "./styles/Global.styles";
 import theme from "./styles/Theme";
@@ -16,6 +17,8 @@ function App() {
         return <Landing />;
       case "about":
         return <About />;
+      case "contact":
+        return <Contact />;
       default:
         return <Landing />;
     }

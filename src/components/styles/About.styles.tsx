@@ -4,12 +4,10 @@ import { Heading, Box } from "@chakra-ui/react";
 export const AboutWrapper = styled.section`
   display: flex;
   flex-direction: column;
-  padding: 4rem 2rem;
-  overflow: hidden;
-  width: 100%;
+  padding: 6rem 2rem 3rem;
   max-width: 1200px;
   margin: auto;
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
 `;
 
 export const SectionTitle = styled(Heading)`

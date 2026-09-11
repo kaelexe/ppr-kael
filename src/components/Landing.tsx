@@ -6,9 +6,9 @@ import {
   TopText,
   BottomText,
   Type,
+  Description,
 } from "./styles/Landing.style";
 import Typewriter from "typewriter-effect";
-import { ThemeProvider } from "@chakra-ui/react";
 
 const Landing = () => {
   return (
@@ -23,10 +23,16 @@ const Landing = () => {
                 autoStart: true,
                 loop: true,
                 delay: 70,
-                strings: ["I.T Graduate", "Web Developer", "UI/UX Designer"],
+                strings: ["React & TypeScript Developer", "Full-Stack Developer", "UI/UX Designer"],
               }}
             />
           </Type>
+          <Description>
+            I'm a web developer based in Davao City, Philippines, with experience
+            in React, TypeScript, and PHP. I work on frontend interfaces,
+            full-stack applications, and UI/UX design for professional and
+            freelance projects.
+          </Description>
         </Intro>
       </Hero>
     </LandingWrapper>

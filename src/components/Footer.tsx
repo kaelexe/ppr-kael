@@ -11,7 +11,7 @@ const Footer = () => {
     <FooterContainer>
       <Text>© {new Date().getFullYear()} John Kael. All rights reserved.</Text>
       <IconLinks>
-        <a href="mailto:your@email.com" aria-label="Email">
+        <a href="mailto:johnmichaelamto@gmail.com" aria-label="Email John Michael">
           <FaEnvelope />
         </a>
         <a

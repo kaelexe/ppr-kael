@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { Heading } from "@chakra-ui/react";
 
 export const LandingWrapper = styled.div`
-  width: 100%;
   padding: 0 1rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -12,7 +11,8 @@ export const Hero = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px);
+  padding: 6rem 0 3rem;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -46,4 +46,10 @@ export const BottomText = styled(Heading)`
 export const Type = styled.div`
   font-size: clamp(1.2rem, 3vw, 2rem);
   color: #888;
+`;
+
+export const Description = styled.p`
+  max-width: 600px;
+  font-size: 1rem;
+  line-height: 1.8;
 `;

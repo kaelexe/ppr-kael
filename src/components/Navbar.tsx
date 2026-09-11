@@ -19,8 +19,14 @@ interface NavbarProps {
   onNavigate: (page: string) => void;
 }
 
-const NavLink = ({ children }: { children: React.ReactNode }) => (
+interface NavLinkProps {
+  children: React.ReactNode;
+  onClick: () => void;
+}
+
+const NavLink = ({ children, onClick }: NavLinkProps) => (
   <Button
+    onClick={onClick}
     variant="ghost"
     size="sm"
     fontWeight="medium"
@@ -52,10 +58,8 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         <HStack spacing={8} alignItems="center">
           <HStack as="nav" spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link}>
-                <span onClick={() => onNavigate(link.toLowerCase())}>
-                  {link}
-                </span>
+              <NavLink key={link} onClick={() => onNavigate(link.toLowerCase())}>
+                {link}
               </NavLink>
             ))}
           </HStack>
@@ -84,15 +88,14 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         <Box pb={4} display={{ md: "none" }}>
           <Stack as="nav" spacing={4}>
             {Links.map((link) => (
-              <NavLink key={link}>
-                <span
-                  onClick={() => {
-                    onNavigate(link.toLowerCase());
-                    onClose();
-                  }}
-                >
-                  {link}
-                </span>
+              <NavLink
+                key={link}
+                onClick={() => {
+                  onNavigate(link.toLowerCase());
+                  onClose();
+                }}
+              >
+                {link}
               </NavLink>
             ))}
           </Stack>

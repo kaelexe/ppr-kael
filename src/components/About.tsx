@@ -11,10 +11,6 @@ import { Button, Text } from "@chakra-ui/react";
 import Marquee from "./framer-motion/Marquee";
 
 const About: React.FC = () => {
-  const onClickDownload = () => {
-    console.log("Download Resume");
-  };
-
   return (
     <AboutWrapper>
       <SectionTitle>
@@ -24,20 +20,25 @@ const About: React.FC = () => {
 
       <AboutContent>
         <TextContainer>
-          <Text fontSize={["sm", "md", "lg"]} textAlign="justify" mt={4}>
-            I'm a web developer who blends clean design with efficient code. I
-            focus on building fast, accessible, and responsive web experiences
-            that work beautifully on any device. Whether it’s crafting intuitive
-            user interfaces or writing scalable backend logic.
+          <Text fontSize={["md", "md", "lg"]} textAlign="justify" mt={4}>
+            I'm a web developer based in Davao City, Philippines. My experience
+            spans frontend development with React, TypeScript, and Tailwind CSS,
+            full-stack work with PHP, CodeIgniter, and MySQL, and UI/UX design in
+            Figma. Since graduating, I've focused on professional and freelance
+            client projects.
           </Text>
           <Button
-            onClick={onClickDownload}
+            as="a"
+            href={`${process.env.PUBLIC_URL}/John_Michael_Amto_Resume.pdf`}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View Resume (opens in a new tab)"
             mt="8"
             fontSize="sm"
             colorScheme="orange"
-            width={["100px", "150px", "180px"]}
+            width={["150px", "150px", "180px"]}
           >
-            Download Resume
+            View Resume
           </Button>
         </TextContainer>
         <TechColumn>
