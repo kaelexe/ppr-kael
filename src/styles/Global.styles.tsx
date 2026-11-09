@@ -9,6 +9,17 @@ export const GlobalStyles = createGlobalStyle`
     font-family: "Poppins", sans-serif;
     box-sizing: border-box;
     transition: background-color 0.3s ease, color 0.3s ease;
+    scrollbar-width: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  html, body, #root {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
   }
 
   li {

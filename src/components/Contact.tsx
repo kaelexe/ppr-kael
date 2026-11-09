@@ -4,6 +4,7 @@ import {
   FormControl,
   FormHelperText,
   FormLabel,
+  Input,
   Text,
   Textarea,
 } from "@chakra-ui/react";
@@ -20,15 +21,10 @@ const Contact: React.FC = () => {
   const [message, setMessage] = useState("");
 
   const onSubmitEmail = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
     if (!message.trim()) {
+      event.preventDefault();
       return;
     }
-
-    const subject = encodeURIComponent("Portfolio inquiry");
-    const body = encodeURIComponent(message.trim());
-    window.location.href = `mailto:johnmichaelamto@gmail.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -42,7 +38,49 @@ const Contact: React.FC = () => {
           Have a project in mind? Tell me what you're building and where you
           could use a hand.
         </Text>
-        <ContactForm onSubmit={onSubmitEmail}>
+        <ContactForm
+          action="https://formsubmit.co/johnmichaelamto@gmail.com"
+          method="POST"
+          onSubmit={onSubmitEmail}
+        >
+          <input type="hidden" name="_subject" value="Portfolio inquiry" />
+          <input type="hidden" name="_template" value="table" />
+          <input
+            type="text"
+            name="_honey"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            style={{ display: "none" }}
+          />
+          <FormControl isRequired>
+            <FormLabel htmlFor="contact-name">Your name</FormLabel>
+            <Input
+              id="contact-name"
+              name="name"
+              autoComplete="name"
+              maxLength={100}
+              pattern={".*\\S.*"}
+              title="Please enter your name."
+              focusBorderColor="orange.400"
+              fontSize="md"
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel htmlFor="contact-email">Your email</FormLabel>
+            <Input
+              id="contact-email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              maxLength={254}
+              focusBorderColor="orange.400"
+              fontSize="md"
+            />
+            <FormHelperText fontSize="sm">
+              So I can reply to your inquiry.
+            </FormHelperText>
+          </FormControl>
           <FormControl isRequired>
             <FormLabel htmlFor="contact-message">Your message</FormLabel>
             <Textarea
@@ -58,8 +96,8 @@ const Contact: React.FC = () => {
               fontSize="md"
             />
             <FormHelperText fontSize="sm">
-              This opens a draft in your email app. Review it and send it there.
-              If no app opens, copy your message and email me directly.
+              FormSubmit handles delivery. Continue to its verification page to
+              finish sending your message.
             </FormHelperText>
           </FormControl>
           <Button
@@ -69,7 +107,7 @@ const Contact: React.FC = () => {
             alignSelf="flex-start"
             isDisabled={!message.trim()}
           >
-            Open email draft
+            Send message
           </Button>
         </ContactForm>
       </ContactContent>

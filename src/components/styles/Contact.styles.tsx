@@ -4,10 +4,10 @@ import { Heading, Box } from "@chakra-ui/react";
 export const ContactWrapper = styled.section`
   display: flex;
   flex-direction: column;
-  padding: 6rem 2rem 3rem;
+  padding: 2rem;
   max-width: 1200px;
   margin: auto;
-  min-height: calc(100vh - 60px);
+  min-height: 100%;
 `;
 
 export const SectionTitle = styled(Heading)`
@@ -21,7 +21,7 @@ export const SectionTitle = styled(Heading)`
 export const Line = styled.div`
   flex-grow: 1;
   height: 2px;
-  background: #ffa500;
+  background: var(--portfolio-accent, #ffa500);
   margin-left: 1rem;
 `;
 

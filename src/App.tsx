@@ -1,12 +1,13 @@
 import React, { useState } from "react";
-import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import Navbar from "./components/Navbar";
 import Landing from "./components/Landing";
-import About from "./components/About";
 import Contact from "./components/Contact";
+import Projects from "./components/Projects";
 import Footer from "./components/Footer";
+import DotField from "./components/DotField";
+import { PageViewport, PortfolioSurface } from "./components/styles/DotField.styles";
 import { GlobalStyles } from "./styles/Global.styles";
-import theme from "./styles/Theme";
+import PortfolioThemeProvider from "./styles/PortfolioThemeProvider";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -15,23 +16,25 @@ function App() {
     switch (currentPage) {
       case "home":
         return <Landing />;
-      case "about":
-        return <About />;
       case "contact":
         return <Contact />;
+      case "projects":
+        return <Projects />;
       default:
         return <Landing />;
     }
   };
 
   return (
-    <ChakraProvider theme={theme}>
-      <ColorModeScript initialColorMode={theme.config.initialColorMode} />
+    <PortfolioThemeProvider>
       <GlobalStyles />
-      <Navbar onNavigate={(page) => setCurrentPage(page)} />
-      {renderPage()}
-      <Footer />
-    </ChakraProvider>
+      <PortfolioSurface>
+        <DotField />
+        <Navbar onNavigate={(page) => setCurrentPage(page)} />
+        <PageViewport>{renderPage()}</PageViewport>
+        <Footer />
+      </PortfolioSurface>
+    </PortfolioThemeProvider>
   );
 }
 

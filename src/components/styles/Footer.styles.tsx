@@ -2,13 +2,21 @@ import styled from "styled-components";
 
 export const FooterContainer = styled.footer`
   display: flex;
+  flex-shrink: 0;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: ${({ theme }) => theme.background};
-  color: ${({ theme }) => theme.text};
+  background: var(--portfolio-footer-bg);
+  color: inherit;
   font-size: 0.875rem;
-  border-top: 1px solid ${({ theme }) => theme.border};
+  border-top: 1px solid var(--portfolio-border);
+  @media (max-width: 480px) {
+    padding: 0.75rem 1.25rem;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+    font-size: 0.75rem;
+  }
 `;
 
 export const Text = styled.p`
@@ -25,7 +33,7 @@ export const IconLinks = styled.div`
     transition: color 0.3s;
 
     &:hover {
-      color: ${({ theme }) => theme.accent};
+      color: var(--portfolio-accent);
     }
   }
 `;

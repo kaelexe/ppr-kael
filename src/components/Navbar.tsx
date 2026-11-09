@@ -5,15 +5,17 @@ import {
   HStack,
   IconButton,
   useDisclosure,
-  useColorMode,
   useColorModeValue,
   Stack,
   Button,
+  Tooltip,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon, MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ReactComponent as Logo } from "../assets/klx_main.svg";
+import SakuraIcon from "./icons/SakuraIcon";
+import { usePortfolioTheme } from "../styles/PortfolioThemeProvider";
 
-const Links = ["Home", "About", "Projects", "Contact"];
+const Links = ["Overview", "Projects", "Contact"];
 
 interface NavbarProps {
   onNavigate: (page: string) => void;
@@ -38,7 +40,8 @@ const NavLink = ({ children, onClick }: NavLinkProps) => (
 
 const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { appearance, nextAppearance, cycleTheme } = usePortfolioTheme();
+  const themeLabel = `${appearance.charAt(0).toUpperCase() + appearance.slice(1)} theme. Switch to ${nextAppearance.charAt(0).toUpperCase() + nextAppearance.slice(1)} theme`;
 
   return (
     <Box
@@ -66,14 +69,17 @@ const Navbar: React.FC<NavbarProps> = ({ onNavigate }) => {
         </HStack>
 
         <Flex alignItems="center">
-          <IconButton
-            aria-label="Toggle color mode"
-            icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
-            onClick={toggleColorMode}
-            mr={2}
-            size="sm"
-            variant="ghost"
-          />
+          <Tooltip label={themeLabel}>
+            <IconButton
+              aria-label={themeLabel}
+              icon={appearance === "sakura" ? <SakuraIcon /> : appearance === "dark" ? <MoonIcon /> : <SunIcon />}
+              onClick={cycleTheme}
+              color={appearance === "sakura" ? "orange.600" : undefined}
+              mr={2}
+              size="sm"
+              variant="ghost"
+            />
+          </Tooltip>
           <IconButton
             size="md"
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}

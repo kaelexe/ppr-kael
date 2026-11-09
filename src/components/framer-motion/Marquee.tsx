@@ -1,7 +1,6 @@
-// src/components/framer-motion/Marquee.tsx
-import React from "react";
-import { motion } from "framer-motion";
-import styled from "styled-components";
+import React, { useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { FaPause, FaPlay } from "react-icons/fa";
 import html from "../../assets/html-icon.png";
 import css from "../../assets/css-icon.png";
 import js from "../../assets/js-icon.png";
@@ -12,61 +11,95 @@ import mysql from "../../assets/mysql-icon.png";
 import github from "../../assets/github-icon.png";
 import nodejs from "../../assets/node-icon.png";
 import java from "../../assets/java-icon.png";
-import divider from "../../assets/divider.png";
 
 const techIcons = [
-  html,
-  css,
-  js,
-  java,
-  php,
-  divider,
-  react,
-  nodejs,
-  ci,
-  divider,
-  mysql,
-  divider,
-  github,
+  { src: html, name: "HTML" },
+  { src: css, name: "CSS" },
+  { src: js, name: "JavaScript" },
+  { src: java, name: "Java" },
+  { src: php, name: "PHP" },
+  { src: react, name: "React" },
+  { src: nodejs, name: "Node.js" },
+  { src: ci, name: "CodeIgniter" },
+  { src: mysql, name: "MySQL" },
+  { src: github, name: "GitHub" },
 ];
+
+const move = keyframes`
+  to { transform: translateX(-50%); }
+`;
+
+const MarqueeRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  .motion-control { display: grid; place-items: center; width: 32px; height: 32px; flex-shrink: 0; opacity: 0.6; border-radius: 50%; }
+  .motion-control:hover { opacity: 1; background: rgba(128,128,128,0.12); }
+  .motion-control:focus-visible { outline: 2px solid var(--portfolio-accent, #ffa500); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .motion-control { display: none; } }
+`;
 
 const MarqueeWrapper = styled.div`
   overflow: hidden;
-  width: 100%;
+  flex: 1;
+  min-width: 0;
+  mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  @media (prefers-reduced-motion: reduce) { mask-image: none; }
 `;
 
-const MarqueeTrack = styled(motion.div)`
+const MarqueeTrack = styled.div<{ $paused: boolean }>`
   display: flex;
   width: max-content;
-  gap: 2rem;
-  white-space: nowrap;
+  animation: ${move} 28s linear infinite;
+  animation-play-state: ${({ $paused }) => $paused ? "paused" : "running"};
+  ${MarqueeWrapper}:hover & { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+    width: 100%;
+    > div[aria-hidden="true"] { display: none; }
+  }
 `;
 
-const TechIcon = styled.div`
-  font-size: 2rem;
+const IconGroup = styled.div`
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 2rem;
+  padding-right: 2rem;
+  img { display: block; width: 30px; height: 30px; object-fit: contain; }
+  @media (prefers-reduced-motion: reduce) {
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    padding-right: 0;
+    flex-shrink: 1;
+  }
 `;
 
 const Marquee: React.FC = () => {
-  // Duplicate icons to make loop seamless
-  const repeatedIcons = [...techIcons, ...techIcons];
+  const [paused, setPaused] = useState(false);
 
   return (
-    <MarqueeWrapper>
-      <MarqueeTrack
-        animate={{ x: ["0%", "-50%"] }}
-        transition={{
-          duration: 15,
-          repeat: Infinity,
-          ease: "linear",
-        }}
+    <MarqueeRow role="group" aria-label="Technology skills">
+      <MarqueeWrapper>
+        <MarqueeTrack $paused={paused}>
+          <IconGroup>
+            {techIcons.map((icon) => <img key={icon.name} src={icon.src} alt={icon.name} title={icon.name} width={30} height={30} />)}
+          </IconGroup>
+          <IconGroup aria-hidden="true">
+            {techIcons.map((icon) => <img key={icon.name} src={icon.src} alt="" width={30} height={30} />)}
+          </IconGroup>
+        </MarqueeTrack>
+      </MarqueeWrapper>
+      <button
+        className="motion-control"
+        type="button"
+        aria-label={paused ? "Play technology animation" : "Pause technology animation"}
+        onClick={() => setPaused(!paused)}
       >
-        {repeatedIcons.map((icon, index) => (
-          <TechIcon key={index}>
-            <img src={icon} alt={`tech-${index}`} width={30} height={30} />
-          </TechIcon>
-        ))}
-      </MarqueeTrack>
-    </MarqueeWrapper>
+        {paused ? <FaPlay size={11} aria-hidden="true" /> : <FaPause size={11} aria-hidden="true" />}
+      </button>
+    </MarqueeRow>
   );
 };
 
