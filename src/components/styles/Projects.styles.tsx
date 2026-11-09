@@ -94,17 +94,36 @@ export const ProjectStage = styled(motion.article)`
 export const ProjectCover = styled.figure`
   min-width: 0;
   margin: 0;
-  img { display: block; width: 100%; height: min(340px, 43vh); object-fit: cover; object-position: top; border: 6px solid rgba(128,128,128,0.12); }
   figcaption { font-size: 0.75rem; line-height: 1.5; opacity: 0.55; margin-top: 0.75rem; }
   @media (max-width: 1100px) {
-    img { height: clamp(130px, 22vh, 200px); }
     figcaption { display: none; }
   }
+`;
+
+export const ProjectImageFrame = styled.div`
+  position: relative;
+  width: 100%;
+  height: min(340px, 43vh);
+  overflow: hidden;
+  border: 6px solid rgba(128,128,128,0.12);
+  background: rgba(128,128,128,0.08);
+  img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: 0; transition: opacity 0.2s ease; }
+  &[data-image-state="ready"] img { opacity: 1; }
+  .cover-skeleton { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cover-status { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; clip-path: inset(50%); overflow: hidden; white-space: nowrap; }
+  .cover-error { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; padding: 1rem; text-align: center; }
+  @media (max-width: 1100px) {
+    height: clamp(130px, 22vh, 200px);
+  }
   @media (max-height: 650px) and (min-width: 1101px) {
-    img { height: 230px; }
+    height: 230px;
   }
   @media (max-width: 767px) {
-    img { height: clamp(110px, 18vh, 170px); }
+    height: clamp(110px, 18vh, 170px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    img { transition: none; }
+    .cover-skeleton { animation: none; }
   }
 `;
 

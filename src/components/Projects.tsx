@@ -2,6 +2,7 @@ import React, { useRef, useState } from "react";
 import { Badge, Button, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { AnimatePresence, useReducedMotion } from "framer-motion";
+import ProjectImage from "./ProjectImage";
 import {
   ProjectsWrapper, ProjectRail, ProjectStage, ProjectCover, Cover,
   ProjectCopy, DetailNavigation, ReadingPane, ChapterControls, ProjectFooter,
@@ -150,7 +151,7 @@ const Projects: React.FC = () => {
         >
           <ProjectCover>
             {project.image ? (
-              <img src={`${process.env.PUBLIC_URL}/projects/${project.image}`} alt={project.alt} loading="lazy" />
+              <ProjectImage src={`${process.env.PUBLIC_URL}/projects/${project.image}`} alt={project.alt} />
             ) : (
               <Cover $brand={project.id}>
                 <span className="cover-eyebrow">{project.id === "equipify" ? "Everyday tech / Shopify concept" : "Crochet & little joys"}</span>
