@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Badge, Button, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { AnimatePresence, useReducedMotion } from "framer-motion";
@@ -91,18 +91,76 @@ const Projects: React.FC = () => {
   const [chapter, setChapter] = useState(0);
   const [showStorefrontPassword, setShowStorefrontPassword] = useState(false);
   const projectButtons = useRef<(HTMLButtonElement | null)[]>([]);
+  const projectsRef = useRef<HTMLElement>(null);
+  const wheelGesture = useRef({ lastAt: -Infinity, distance: 0, direction: 0, scrolled: false, switched: false });
+  const lastWheelSwitch = useRef(-Infinity);
   const reduceMotion = useReducedMotion();
   const muted = useColorModeValue("gray.600", "gray.300");
   const project = projects[selectedIndex];
   const notes = [["The brief", project.challenge], ["The engineering", project.decision], ["Project scope", project.scope]];
   const chapters = section === "Functionality" ? project.features : notes;
 
-  const selectProject = (index: number) => {
+  const selectProject = useCallback((index: number) => {
     setSelectedIndex(index);
     setSection("Overview");
     setChapter(0);
     setShowStorefrontPassword(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    const gallery = projectsRef.current;
+    if (!gallery) return;
+
+    const onWheel = (event: WheelEvent) => {
+      if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey ||
+          Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+      const target = event.target;
+      if (!(target instanceof Element) || target.closest("input, textarea, select, [contenteditable]")) return;
+
+      const now = performance.now();
+      const direction = Math.sign(event.deltaY);
+      const gesture = wheelGesture.current;
+      if (now - gesture.lastAt > 180) {
+        Object.assign(gesture, { distance: 0, scrolled: false, switched: false });
+      }
+      if (direction !== gesture.direction) gesture.distance = 0;
+      gesture.direction = direction;
+      gesture.lastAt = now;
+
+      // A single wheel or trackpad burst should not skip projects as it tails off.
+      if (gesture.switched) {
+        if (event.cancelable) event.preventDefault();
+        return;
+      }
+
+      // Let the project panel (or its outer viewport) consume native scrolling first.
+      const stop = gallery.parentElement?.parentElement;
+      for (let element: Element | null = target; element && element !== stop; element = element.parentElement) {
+        const maxScroll = element.scrollHeight - element.clientHeight;
+        if (maxScroll > 1 && /^(auto|scroll)$/.test(getComputedStyle(element).overflowY) &&
+            (direction > 0 ? element.scrollTop < maxScroll - 1 : element.scrollTop > 1)) {
+          gesture.scrolled = true;
+          gesture.distance = 0;
+          return;
+        }
+      }
+      if (gesture.scrolled || now - lastWheelSwitch.current < 440) return;
+
+      const next = selectedIndex + direction;
+      if (next < 0 || next >= projects.length) return;
+      if (event.cancelable) event.preventDefault();
+
+      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? gallery.clientHeight : 1;
+      gesture.distance += Math.abs(event.deltaY) * unit;
+      if (gesture.distance < 28) return;
+      gesture.switched = true;
+      lastWheelSwitch.current = now;
+      selectProject(next);
+    };
+
+    gallery.addEventListener("wheel", onWheel, { passive: false });
+    return () => gallery.removeEventListener("wheel", onWheel);
+  }, [selectedIndex, selectProject]);
 
   const onProjectKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     const focusedIndex = projectButtons.current.indexOf(event.target as HTMLButtonElement);
@@ -119,7 +177,7 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <ProjectsWrapper aria-label="Selected projects">
+    <ProjectsWrapper ref={projectsRef} aria-label="Selected projects">
       <ProjectRail aria-label="Select a project" onKeyDown={onProjectKeyDown}>
         <span className="collection-label">Selected work</span>
         {projects.map((item, index) => (
