@@ -83,6 +83,24 @@ const projects = [
     decision: "Keep Liquid and Dawn as the storefront foundation, adding React only where interaction benefits from it. Load the 3D study on approach, pause it offscreen, and support reduced motion rather than making every visitor pay its rendering cost.",
     scope: "Portfolio concept with illustrative products and prices, reference imagery, and demo checkout disabled. The 3D object is an original procedural study, not an exact model of the pictured product. Live checkout verification is not claimed. Shopify storefront access may require a password.",
   },
+  {
+    id: "symbiote", number: "05", name: "Symbiote",
+    category: "Motion & interaction", kind: "Interactive frontend fan project",
+    subtitle: "One organism. A living interface.",
+    description: "A Venom-inspired containment archive with kinetic typography, interactive adaptation profiles, and a spring-driven tendril cursor. An optional Three.js specimen brings the black-and-crimson experience to life.",
+    stack: ["React", "TypeScript", "GSAP", "Three.js", "Lenis", "Vite"],
+    image: "", alt: "", caption: "Editorial cover · The Klyntar Project · fan concept",
+    liveUrl: "https://symbiote-three.vercel.app/",
+    challenge: "Create an expressive, cinematic character experience while keeping its content and controls usable on touch devices, with reduced motion, and without WebGL.",
+    features: [
+      ["An archive in four chapters", "Explore origin, physiology, vulnerabilities, and containment logs through responsive chapter navigation, scroll progress, and animated typography."],
+      ["Adaptations and stress tests", "Preview or select adaptation profiles, then toggle sonic and thermal stimuli to change illustrative containment readings. Escape, leaving the chapter, or window blur resets the tests."],
+      ["A responsive tendril cursor", "Spring-driven Canvas strands follow fine pointers. Fast movement triggers a visual edge-grip effect; calm movement toward the centre or Escape releases it. Touch and reduced-motion users keep their native cursor."],
+      ["Optional 3D and ambient sound", "A locally made specimen loads on eligible desktops, with a static poster fallback on other devices. Ambient audio is opt-in and synthesized locally; stress tests play no high-frequency sound."],
+    ],
+    decision: "Keep animation loops out of React state updates. Defer the compressed 3D model until the hero is visible, cap rendering resolution and frame rate, pause offscreen, and switch to a static poster when rendering is too costly or unavailable.",
+    scope: "Independent, frontend-only fan concept inspired by Venom. Character and lore belong to their respective owners. Containment readings are illustrative; there is no backend, account system, or external AI service. The tendril cursor never locks the pointer or blocks clicks.",
+  },
 ];
 
 const Projects: React.FC = () => {
@@ -210,6 +228,14 @@ const Projects: React.FC = () => {
           <ProjectCover>
             {project.image ? (
               <ProjectImage src={`${process.env.PUBLIC_URL}/projects/${project.image}`} alt={project.alt} />
+            ) : project.id === "symbiote" ? (
+              <Cover $brand={project.id} data-brand="symbiote">
+                <span className="cover-eyebrow">The Klyntar Project / File 005</span>
+                <div className="cover-title">SYM<br />BIOTE<span className="cover-mark">.</span></div>
+                <span className="cover-rule" />
+                <p>One organism.<br />A living interface.</p>
+                <span className="cover-footnote">Motion · Interaction · 3D / 05</span>
+              </Cover>
             ) : (
               <Cover $brand={project.id}>
                 <span className="cover-eyebrow">{project.id === "equipify" ? "Everyday tech / Shopify concept" : "Crochet & little joys"}</span>

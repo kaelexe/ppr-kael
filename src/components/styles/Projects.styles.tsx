@@ -52,8 +52,8 @@ export const ProjectRail = styled.nav`
     .collection-label, .rail-line { display: none; }
     button { width: auto; min-height: 42px; gap: 0.4rem; flex-shrink: 0; }
     .project-number { display: inline; font-size: 0.75rem; opacity: 0.6; }
-    .project-name { opacity: 0.55; transform: none; font-size: 0.875rem; }
-    button[aria-pressed="true"] .project-name { opacity: 1; }
+    .project-name { display: none; transform: none; font-size: 0.875rem; }
+    button[aria-pressed="true"] .project-name { display: inline; opacity: 1; }
     .project-arrow { display: inline; opacity: 0.4; flex-shrink: 0; }
     button:last-child .project-arrow { display: none; }
   }
@@ -64,7 +64,7 @@ export const ProjectRail = styled.nav`
     .project-arrow { width: 0.75rem; }
   }
   @media (max-width: 480px) {
-    button:not([aria-pressed="true"]) .project-name { display: none; }
+    .project-arrow { display: none; }
   }
   @media (prefers-reduced-motion: reduce) {
     .rail-line, .project-name { transition: none; }
@@ -144,6 +144,13 @@ export const Cover = styled.div<{ $brand?: string }>`
   .cover-rule { width: 2rem; height: 1px; background: currentColor; margin: 0.5rem 0; }
   p { font-size: 0.875rem; line-height: 1.5; }
   .cover-footnote { margin-top: 0.75rem; }
+  &[data-brand="symbiote"] {
+    background: radial-gradient(ellipse at 100% 0%, #42131d, transparent 65%), #0e0e12;
+    color: #f5f1ef;
+    border-color: #292126;
+    .cover-title { font-family: "Poppins", sans-serif; font-weight: 800; letter-spacing: -0.065em; }
+    .cover-mark, .cover-eyebrow { color: #ed737f; }
+  }
   @media (max-width: 1100px) {
     height: clamp(130px, 22vh, 200px);
     padding: 1.25rem 1.5rem;
