@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Badge, Button, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { AnimatePresence, useReducedMotion } from "framer-motion";
-import ProjectImage from "./ProjectImage";
 import {
   ProjectsWrapper, ProjectRail, ProjectStage, ProjectCover, Cover,
   ProjectCopy, DetailNavigation, ReadingPane, ChapterControls, ProjectFooter,
@@ -15,7 +14,13 @@ const projects = [
     subtitle: "A little yarn. A lot of character.",
     description: "A crochet showcase that gives handmade pieces room to tell their stories. A moving collection, gentle typography, and a filterable gallery turn a small catalogue into a personal exhibition.",
     stack: ["React", "TypeScript", "Tailwind CSS", "Vite"],
-    image: "", alt: "", caption: "Editorial cover · crochet portfolio interface study",
+    caption: "Editorial cover · crochet portfolio interface study",
+    cover: {
+      eyebrow: "Crochet & little joys",
+      title: <>crafted<br /><em>comforts.</em></>,
+      tagline: <>Small stitches.<br />Endless comforts.</>,
+      footnote: "A frontend design study / 01",
+    },
     liveUrl: "https://crafted-comforts-jet.vercel.app/",
     challenge: "Translate a Figma overview into a responsive, inviting portfolio where the work takes centre stage without making navigation harder.",
     features: [
@@ -33,8 +38,13 @@ const projects = [
     subtitle: "A little care. A lot cooler.",
     description: "An aircon-cleaning booking experience that connects a simple customer journey to a staff scheduling dashboard. Behind the calm interface, database rules protect each appointment slot.",
     stack: ["React", "TypeScript", "Tailwind CSS", "CodeIgniter", "MySQL"],
-    image: "presko-booking.png", alt: "Presko's booking screen with service choices and an appointment summary",
-    caption: "Application screenshot · service selection · synthetic demo",
+    caption: "Editorial cover · aircon care & appointment booking",
+    cover: {
+      eyebrow: "Good air starts here",
+      title: <>presko<span className="cover-mark">.</span></>,
+      tagline: <>A little care.<br />A lot cooler.</>,
+      footnote: "Booking · Scheduling · Care / 02",
+    },
     liveUrl: "https://presko.freedev.app/app/",
     challenge: "Let a customer choose a service and time without an account, while giving one service team a reliable way to manage availability.",
     features: [
@@ -52,8 +62,13 @@ const projects = [
     subtitle: "Every conversation, in its place.",
     description: "A support inbox for the fictional Parcel & Pine shop. Customers follow their own requests while agents manage conversations, private notes, and ticket status in a focused workspace.",
     stack: ["React", "TypeScript", "Tailwind CSS", "CodeIgniter", "MySQL"],
-    image: "pinedesk-workspace.png", alt: "Pinedesk agent workspace showing a ticket queue, customer conversation, and reply composer",
-    caption: "Application screenshot · agent workspace · synthetic demo",
+    caption: "Editorial cover · customer care & support workspace",
+    cover: {
+      eyebrow: "Parcel & Pine / Customer care",
+      title: <>pinedesk<span className="cover-mark">.</span></>,
+      tagline: <>Every conversation,<br />in its place.</>,
+      footnote: "Conversations · Notes · Workflow / 03",
+    },
     liveUrl: "https://pinedeskhelp.freedev.app/",
     challenge: "Make customer conversations easy to follow while keeping agent-only information private at the API boundary, not just hidden in the interface.",
     features: [
@@ -71,7 +86,13 @@ const projects = [
     subtitle: "Everyday gadgets, brought to life.",
     description: "A Dawn-based Shopify storefront with editable Liquid sections, GSAP animation, a React kit builder, and an interactive Three.js product study.",
     stack: ["Shopify Liquid", "JavaScript", "React", "GSAP", "Three.js"],
-    image: "", alt: "", caption: "Editorial cover · Shopify theme concept",
+    caption: "Editorial cover · Shopify theme concept",
+    cover: {
+      eyebrow: "Everyday tech / Shopify concept",
+      title: <>equipify<span className="cover-mark">.</span></>,
+      tagline: <>Thoughtful gear.<br />Playful interactions.</>,
+      footnote: "Liquid · Motion · 3D / 04",
+    },
     liveUrl: "https://quick-start-0c438d35.myshopify.com",
     challenge: "Extend an existing Shopify theme with a distinctive gadget storefront while keeping content editable through Shopify's theme editor.",
     features: [
@@ -89,7 +110,13 @@ const projects = [
     subtitle: "One organism. A living interface.",
     description: "A Venom-inspired containment archive with kinetic typography, interactive adaptation profiles, and a spring-driven tendril cursor. An optional Three.js specimen brings the black-and-crimson experience to life.",
     stack: ["React", "TypeScript", "GSAP", "Three.js", "Lenis", "Vite"],
-    image: "", alt: "", caption: "Editorial cover · The Klyntar Project · fan concept",
+    caption: "Editorial cover · The Klyntar Project · fan concept",
+    cover: {
+      eyebrow: "The Klyntar Project / File 005",
+      title: <>SYM<br />BIOTE<span className="cover-mark">.</span></>,
+      tagline: <>One organism.<br />A living interface.</>,
+      footnote: "Motion · Interaction · 3D / 05",
+    },
     liveUrl: "https://symbiote-three.vercel.app/",
     challenge: "Create an expressive, cinematic character experience while keeping its content and controls usable on touch devices, with reduced motion, and without WebGL.",
     features: [
@@ -226,25 +253,13 @@ const Projects: React.FC = () => {
           transition={{ duration: reduceMotion ? 0 : 0.22, ease: "easeOut" }}
         >
           <ProjectCover>
-            {project.image ? (
-              <ProjectImage src={`${process.env.PUBLIC_URL}/projects/${project.image}`} alt={project.alt} />
-            ) : project.id === "symbiote" ? (
-              <Cover $brand={project.id} data-brand="symbiote">
-                <span className="cover-eyebrow">The Klyntar Project / File 005</span>
-                <div className="cover-title">SYM<br />BIOTE<span className="cover-mark">.</span></div>
-                <span className="cover-rule" />
-                <p>One organism.<br />A living interface.</p>
-                <span className="cover-footnote">Motion · Interaction · 3D / 05</span>
-              </Cover>
-            ) : (
-              <Cover $brand={project.id}>
-                <span className="cover-eyebrow">{project.id === "equipify" ? "Everyday tech / Shopify concept" : "Crochet & little joys"}</span>
-                <div className="cover-title">{project.id === "equipify" ? <>equipify<span className="cover-mark">.</span></> : <>crafted<br /><em>comforts.</em></>}</div>
-                <span className="cover-rule" />
-                <p>{project.id === "equipify" ? <>Thoughtful gear.<br />Playful interactions.</> : <>Small stitches.<br />Endless comforts.</>}</p>
-                <span className="cover-footnote">{project.id === "equipify" ? "Liquid · Motion · 3D / 04" : "A frontend design study / 01"}</span>
-              </Cover>
-            )}
+            <Cover $brand={project.id} data-brand={project.id}>
+              <span className="cover-eyebrow">{project.cover.eyebrow}</span>
+              <div className="cover-title">{project.cover.title}</div>
+              <span className="cover-rule" />
+              <p>{project.cover.tagline}</p>
+              <span className="cover-footnote">{project.cover.footnote}</span>
+            </Cover>
             <figcaption>{project.caption}</figcaption>
           </ProjectCover>
           <ProjectCopy>

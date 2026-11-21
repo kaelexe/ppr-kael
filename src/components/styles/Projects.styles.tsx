@@ -144,6 +144,19 @@ export const Cover = styled.div<{ $brand?: string }>`
   .cover-rule { width: 2rem; height: 1px; background: currentColor; margin: 0.5rem 0; }
   p { font-size: 0.875rem; line-height: 1.5; }
   .cover-footnote { margin-top: 0.75rem; }
+  &[data-brand="presko"] {
+    background: #edf2e4;
+    color: #185c4e;
+    border-color: #dce5cf;
+    .cover-title { font-family: "Poppins", sans-serif; font-weight: 600; }
+    .cover-mark { color: #57856d; }
+  }
+  &[data-brand="pinedesk"] {
+    background: #193b32;
+    color: #f3f1e7;
+    border-color: #2b4b40;
+    .cover-mark { color: #c4cf91; }
+  }
   &[data-brand="symbiote"] {
     background: radial-gradient(ellipse at 100% 0%, #42131d, transparent 65%), #0e0e12;
     color: #f5f1ef;
