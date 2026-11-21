@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Badge, Button, Flex, Heading, Text, useColorModeValue } from "@chakra-ui/react";
+import { Badge, Button, Flex, Heading, Text, useColorModeValue, useMediaQuery } from "@chakra-ui/react";
 import { ArrowBackIcon, ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { AnimatePresence, useReducedMotion } from "framer-motion";
+import ProjectPreview from "./ProjectPreview";
 import {
   ProjectsWrapper, ProjectRail, ProjectStage, ProjectCover, Cover,
   ProjectCopy, DetailNavigation, ReadingPane, ChapterControls, ProjectFooter,
@@ -22,6 +23,7 @@ const projects = [
       footnote: "A frontend design study / 01",
     },
     liveUrl: "https://crafted-comforts-jet.vercel.app/",
+    previewAvailable: true,
     challenge: "Translate a Figma overview into a responsive, inviting portfolio where the work takes centre stage without making navigation harder.",
     features: [
       ["A collection in motion", "An automatically moving hero includes a pause control and respects reduced-motion preferences."],
@@ -46,6 +48,7 @@ const projects = [
       footnote: "Booking · Scheduling · Care / 02",
     },
     liveUrl: "https://presko.freedev.app/app/",
+    previewAvailable: false,
     challenge: "Let a customer choose a service and time without an account, while giving one service team a reliable way to manage availability.",
     features: [
       ["Three-step booking", "Choose a service, select an available time, and enter contact details. Prices and availability are validated by the server."],
@@ -70,6 +73,7 @@ const projects = [
       footnote: "Conversations · Notes · Workflow / 03",
     },
     liveUrl: "https://pinedeskhelp.freedev.app/",
+    previewAvailable: false,
     challenge: "Make customer conversations easy to follow while keeping agent-only information private at the API boundary, not just hidden in the interface.",
     features: [
       ["Two distinct perspectives", "Requesters can create tickets and see their own conversations. Agents can access the wider support inbox."],
@@ -94,6 +98,7 @@ const projects = [
       footnote: "Liquid · Motion · 3D / 04",
     },
     liveUrl: "https://quick-start-0c438d35.myshopify.com",
+    previewAvailable: false,
     challenge: "Extend an existing Shopify theme with a distinctive gadget storefront while keeping content editable through Shopify's theme editor.",
     features: [
       ["Merchant-editable sections", "Custom Liquid sections expose the hero, collection, product lab, kit builder, and brand story to Shopify's theme editor."],
@@ -118,6 +123,7 @@ const projects = [
       footnote: "Motion · Interaction · 3D / 05",
     },
     liveUrl: "https://symbiote-three.vercel.app/",
+    previewAvailable: true,
     challenge: "Create an expressive, cinematic character experience while keeping its content and controls usable on touch devices, with reduced motion, and without WebGL.",
     features: [
       ["An archive in four chapters", "Explore origin, physiology, vulnerabilities, and containment logs through responsive chapter navigation, scroll progress, and animated typography."],
@@ -130,11 +136,19 @@ const projects = [
   },
 ];
 
-const Projects: React.FC = () => {
+interface ProjectsProps {
+  onPreviewChange?: (open: boolean) => void;
+}
+
+const Projects: React.FC<ProjectsProps> = ({ onPreviewChange }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [section, setSection] = useState("Overview");
   const [chapter, setChapter] = useState(0);
   const [showStorefrontPassword, setShowStorefrontPassword] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [desktopPreview] = useMediaQuery("(min-width: 1101px)");
+  const previewTrigger = useRef<HTMLButtonElement>(null);
+  const wasPreviewOpen = useRef(false);
   const projectButtons = useRef<(HTMLButtonElement | null)[]>([]);
   const projectsRef = useRef<HTMLElement>(null);
   const wheelGesture = useRef({ lastAt: -Infinity, distance: 0, direction: 0, scrolled: false, switched: false });
@@ -144,17 +158,44 @@ const Projects: React.FC = () => {
   const project = projects[selectedIndex];
   const notes = [["The brief", project.challenge], ["The engineering", project.decision], ["Project scope", project.scope]];
   const chapters = section === "Functionality" ? project.features : notes;
+  // Preview support depends on each host's framing and cookie restrictions.
+  const canPreview = desktopPreview && project.previewAvailable;
+
+  useEffect(() => {
+    onPreviewChange?.(previewOpen);
+    return () => onPreviewChange?.(false);
+  }, [previewOpen, onPreviewChange]);
+
+  useEffect(() => {
+    if (!previewOpen && wasPreviewOpen.current) previewTrigger.current?.focus();
+    wasPreviewOpen.current = previewOpen;
+  }, [previewOpen]);
+
+  useEffect(() => {
+    if (!desktopPreview) setPreviewOpen(false);
+  }, [desktopPreview]);
+
+  useEffect(() => {
+    if (!previewOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setPreviewOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [previewOpen]);
 
   const selectProject = useCallback((index: number) => {
     setSelectedIndex(index);
     setSection("Overview");
     setChapter(0);
     setShowStorefrontPassword(false);
+    setPreviewOpen(false);
   }, []);
 
   useEffect(() => {
     const gallery = projectsRef.current;
-    if (!gallery) return;
+    if (!gallery || previewOpen) return;
+    Object.assign(wheelGesture.current, { lastAt: -Infinity, distance: 0, direction: 0, scrolled: false, switched: false });
 
     const onWheel = (event: WheelEvent) => {
       if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.shiftKey ||
@@ -205,7 +246,7 @@ const Projects: React.FC = () => {
 
     gallery.addEventListener("wheel", onWheel, { passive: false });
     return () => gallery.removeEventListener("wheel", onWheel);
-  }, [selectedIndex, selectProject]);
+  }, [selectedIndex, selectProject, previewOpen]);
 
   const onProjectKeyDown = (event: React.KeyboardEvent<HTMLElement>) => {
     const focusedIndex = projectButtons.current.indexOf(event.target as HTMLButtonElement);
@@ -222,8 +263,8 @@ const Projects: React.FC = () => {
   };
 
   return (
-    <ProjectsWrapper ref={projectsRef} aria-label="Selected projects">
-      <ProjectRail aria-label="Select a project" onKeyDown={onProjectKeyDown}>
+    <ProjectsWrapper ref={projectsRef} aria-label="Selected projects" data-preview-open={previewOpen}>
+      {!previewOpen && <ProjectRail aria-label="Select a project" onKeyDown={onProjectKeyDown}>
         <span className="collection-label">Selected work</span>
         {projects.map((item, index) => (
           <button
@@ -241,11 +282,13 @@ const Projects: React.FC = () => {
             <ArrowForwardIcon className="project-arrow" aria-hidden="true" />
           </button>
         ))}
-      </ProjectRail>
+      </ProjectRail>}
       <AnimatePresence mode="wait" initial={false}>
         <ProjectStage
           id="selected-project"
           key={project.id}
+          layout={!reduceMotion}
+          data-preview-summary={previewOpen}
           aria-labelledby={`title-${project.id}`}
           initial={reduceMotion ? false : { opacity: 0, y: 12, scale: 0.985 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -266,33 +309,59 @@ const Projects: React.FC = () => {
             <Text fontSize="sm" color={muted} letterSpacing="0.12em" textTransform="uppercase">{project.number} / {String(projects.length).padStart(2, "0")} &nbsp;·&nbsp; {project.category}</Text>
             <Heading id={`title-${project.id}`} as="h1" className="project-title">{project.name}</Heading>
             <Text className="project-subtitle" color={muted}>{project.subtitle}</Text>
-            <DetailNavigation aria-label="Project details">
-              {["Overview", "Functionality", "Notes"].map((item) => (
-                <button key={item} type="button" aria-pressed={section === item} onClick={() => { setSection(item); setChapter(0); }}>{item}</button>
-              ))}
-            </DetailNavigation>
-            <ReadingPane key={`${project.id}-${section}-${chapter}`} aria-live="polite">
-              {section === "Overview" ? (
-                <>
-                  <Text lineHeight="1.8" color={muted}>{project.description}</Text>
-                  <Flex gap="2" mt="5" flexWrap="wrap" aria-label={`${project.name} technologies`}>
-                    {project.stack.map((tech) => <Badge key={tech} variant="outline" fontWeight="400" textTransform="none" fontSize="sm" px="2" py="0.5" borderRadius="full">{tech}</Badge>)}
-                  </Flex>
-                </>
-              ) : (
-                <>
-                  <Heading as="h2" fontSize="lg" mb="3">{chapters[chapter][0]}</Heading>
-                  <Text lineHeight="1.8" color={muted}>{chapters[chapter][1]}</Text>
-                  <ChapterControls aria-label={`${section} pages`}>
-                    <button type="button" aria-label={`Previous ${section.toLowerCase()} page`} disabled={chapter === 0} onClick={() => setChapter(chapter - 1)}><ArrowBackIcon /></button>
-                    <span>{String(chapter + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}</span>
-                    <button type="button" aria-label={`Next ${section.toLowerCase()} page`} disabled={chapter === chapters.length - 1} onClick={() => setChapter(chapter + 1)}><ArrowForwardIcon /></button>
-                  </ChapterControls>
-                </>
-              )}
-            </ReadingPane>
+            {previewOpen ? (
+              <Text className="preview-summary" color={muted}>{project.description}</Text>
+            ) : (
+              <>
+                <DetailNavigation aria-label="Project details">
+                  {["Overview", "Functionality", "Notes"].map((item) => (
+                    <button key={item} type="button" aria-pressed={section === item} onClick={() => { setSection(item); setChapter(0); }}>{item}</button>
+                  ))}
+                </DetailNavigation>
+                <ReadingPane key={`${project.id}-${section}-${chapter}`} aria-live="polite">
+                  {section === "Overview" ? (
+                    <>
+                      <Text lineHeight="1.8" color={muted}>{project.description}</Text>
+                      <Flex gap="2" mt="5" flexWrap="wrap" aria-label={`${project.name} technologies`}>
+                        {project.stack.map((tech) => <Badge key={tech} variant="outline" fontWeight="400" textTransform="none" fontSize="sm" px="2" py="0.5" borderRadius="full">{tech}</Badge>)}
+                      </Flex>
+                    </>
+                  ) : (
+                    <>
+                      <Heading as="h2" fontSize="lg" mb="3">{chapters[chapter][0]}</Heading>
+                      <Text lineHeight="1.8" color={muted}>{chapters[chapter][1]}</Text>
+                      <ChapterControls aria-label={`${section} pages`}>
+                        <button type="button" aria-label={`Previous ${section.toLowerCase()} page`} disabled={chapter === 0} onClick={() => setChapter(chapter - 1)}><ArrowBackIcon /></button>
+                        <span>{String(chapter + 1).padStart(2, "0")} / {String(chapters.length).padStart(2, "0")}</span>
+                        <button type="button" aria-label={`Next ${section.toLowerCase()} page`} disabled={chapter === chapters.length - 1} onClick={() => setChapter(chapter + 1)}><ArrowForwardIcon /></button>
+                      </ChapterControls>
+                    </>
+                  )}
+                </ReadingPane>
+              </>
+            )}
             <ProjectFooter>
-              <Button as="a" href={project.liveUrl} target="_blank" rel="noopener noreferrer" variant="outline" colorScheme="orange" rightIcon={<ExternalLinkIcon />} size="sm" aria-label={`Visit ${project.name} live site (opens in a new tab)`}>Visit live site</Button>
+              <Button
+                as="a"
+                ref={previewTrigger}
+                href={project.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="outline"
+                colorScheme="orange"
+                rightIcon={<ExternalLinkIcon />}
+                size="sm"
+                aria-label={canPreview ? previewOpen ? `Close ${project.name} preview` : `Preview ${project.name}` : `Visit ${project.name} live site (opens in a new tab)`}
+                aria-expanded={canPreview ? previewOpen : undefined}
+                aria-controls={canPreview && previewOpen ? "project-preview" : undefined}
+                onClick={(event) => {
+                  if (!canPreview || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                  event.preventDefault();
+                  setPreviewOpen(!previewOpen);
+                }}
+              >
+                {canPreview ? previewOpen ? "Back to project" : "Preview project" : "Visit live site"}
+              </Button>
               <Text fontSize="sm" color={muted}>{project.kind}</Text>
               {project.id === "equipify" && (
                 <div className="storefront-access">
@@ -316,6 +385,13 @@ const Projects: React.FC = () => {
           </ProjectCopy>
         </ProjectStage>
       </AnimatePresence>
+      {previewOpen && desktopPreview && (
+        <ProjectPreview
+          name={project.name}
+          url={project.liveUrl}
+          onClose={() => setPreviewOpen(false)}
+        />
+      )}
     </ProjectsWrapper>
   );
 };

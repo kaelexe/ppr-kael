@@ -9,7 +9,7 @@ interface Dot {
   phase: number;
 }
 
-const DotField: React.FC = () => {
+const DotField: React.FC<{ paused?: boolean }> = ({ paused = false }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const color = useColorModeValue("100, 107, 118", "181, 188, 199");
 
@@ -63,7 +63,7 @@ const DotField: React.FC = () => {
     const syncAnimation = () => {
       window.cancelAnimationFrame(frame);
       frame = 0;
-      if (!document.hidden && visible && !motion.matches) {
+      if (!paused && !document.hidden && visible && !motion.matches) {
         frame = window.requestAnimationFrame(animate);
       } else {
         draw(0);
@@ -89,7 +89,7 @@ const DotField: React.FC = () => {
     };
 
     const onPointerMove = (event: PointerEvent) => {
-      if (motion.matches || event.pointerType === "touch") {
+      if (paused || motion.matches || event.pointerType === "touch") {
         return;
       }
       const bounds = canvas.getBoundingClientRect();
@@ -131,7 +131,7 @@ const DotField: React.FC = () => {
       document.removeEventListener("visibilitychange", syncAnimation);
       motion.removeEventListener("change", onMotionChange);
     };
-  }, [color]);
+  }, [color, paused]);
 
   return <DotCanvas ref={canvasRef} aria-hidden="true" />;
 };

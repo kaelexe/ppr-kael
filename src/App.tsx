@@ -11,6 +11,7 @@ import PortfolioThemeProvider from "./styles/PortfolioThemeProvider";
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home");
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -19,7 +20,7 @@ function App() {
       case "contact":
         return <Contact />;
       case "projects":
-        return <Projects />;
+        return <Projects onPreviewChange={setPreviewOpen} />;
       default:
         return <Landing />;
     }
@@ -29,7 +30,7 @@ function App() {
     <PortfolioThemeProvider>
       <GlobalStyles />
       <PortfolioSurface>
-        <DotField />
+        <DotField paused={previewOpen} />
         <Navbar onNavigate={(page) => setCurrentPage(page)} />
         <PageViewport>{renderPage()}</PageViewport>
         <Footer />

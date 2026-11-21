@@ -17,6 +17,13 @@ export const ProjectsWrapper = styled.main`
   min-height: 0;
   margin: auto;
   padding: 2rem clamp(1.25rem, 4vw, 4rem);
+  &[data-preview-open="true"] {
+    grid-template-columns: minmax(250px, 290px) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 1.5rem;
+    max-width: 1800px;
+    padding: 1.25rem 2rem;
+  }
   @media (max-width: 1000px) {
     grid-template-columns: 155px minmax(0, 1fr);
     gap: 1.5rem;
@@ -80,6 +87,18 @@ export const ProjectStage = styled(motion.article)`
   min-height: 0;
   max-height: 100%;
   overflow-y: auto;
+  &[data-preview-summary="true"] {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 1.25rem;
+    height: 100%;
+    figure > div { height: 150px; padding: 1.25rem; }
+    .cover-title { font-size: 2rem; }
+    .cover-eyebrow { font-size: 0.6rem; }
+    .cover-rule, .cover-footnote, figure p, figcaption { display: none; }
+    .project-title { font-size: 1.75rem; }
+    .preview-summary { font-size: 1rem; line-height: 1.75; margin-top: 1.25rem; }
+  }
   @media (max-width: 1100px) {
     grid-template-columns: minmax(0, 1fr);
     gap: 1.5rem;
